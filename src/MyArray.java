@@ -4,6 +4,7 @@ public class MyArray<T> implements Iterable<T>{
 
     private Object[] tab;
     private int size, last = 0;
+    private MyArrayIt it = new MyArrayIt();
 
     public MyArray(){
         tab = new Object[10];
@@ -36,9 +37,9 @@ public class MyArray<T> implements Iterable<T>{
     }
 
     public void addAll(Collection c){
-        for(int i = last; i<last+c.size(); i++){
+        for(Object o: c){
             checkSize();
-            tab[i] = c.iterator().next();
+            tab[last] = (T)o;
             last++;
         }
     }
@@ -128,6 +129,37 @@ public class MyArray<T> implements Iterable<T>{
 
     @Override
     public Iterator iterator() {
-        return null;
+
+        return it;
+    }
+
+    private class MyArrayIt<T> implements Iterator<T>{
+
+        private int current;
+
+        public MyArrayIt(){
+            current = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if(current<last){
+                return true;
+            }else{
+                return false;
+            }
+
+        }
+
+        @Override
+        public T next() {
+            if(hasNext()){
+                T temp = (T) tab[current];
+                current++;
+                return temp;
+            }else{
+                throw new NoSuchElementException();
+            }
+        }
     }
 }

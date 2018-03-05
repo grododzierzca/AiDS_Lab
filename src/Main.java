@@ -1,29 +1,47 @@
+import GrupaZajeciowa.GrupaZajeciowa;
+import GrupaZajeciowa.Student;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String [] args){
 
-        MyArray<Integer> a = new MyArray<>();
-        MyArray<String> b = new MyArray<>(10);
+        MyArray<Student> ar = new MyArray<>();
+        MyLinked<Student> lk = new MyLinked<>();
+        int liczba_zadan = 5;
+        int max_punktow = 10;
+        ArrayList<Student> lista = new ArrayList();
 
-        a.add(1);
-        a.add(100);
-        System.out.println(a.toString());
-        for(int i = 0; i<100; i++){
-            a.add(i*i);
+        try(BufferedReader in = new BufferedReader(new FileReader("grupa.csv"))){
+            in.readLine();
+            String wiersz = new String();
+            while((wiersz = in.readLine())!=null){
+                String [] temp = wiersz.split(",");
+                Student a = new Student(temp[0], temp[1], Integer.valueOf(temp[2]), Integer.valueOf(temp[3]), Integer.valueOf(temp[4]), liczba_zadan, max_punktow);
+                for(int i=0; i<liczba_zadan; i++){
+                    a.getZadania().setUzyskaneP(i, Integer.valueOf(temp[6+i]));
+                }
+                lista.add(a);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        System.out.println(a.toString());
-        System.out.println(a.size());
+        lk.addAll(lista);
+        ar.addAll(lista);
 
-        b.add("Czipsy");
-        b.add(0, "Kupa");
-        System.out.println(b.toString());
-        System.out.println(b.size());
-
-        for(int i = 0; i <= a.size(); i++){
-            a.remove(i);
+        while(ar.iterator().hasNext()){
+            System.out.println(ar.iterator().next().toString());
         }
-        System.out.println("Czip "+a);
-
+        while(lk.iterator().hasNext()){
+            System.out.println(lk.iterator().next().toString());
+        }
 
 
     }
