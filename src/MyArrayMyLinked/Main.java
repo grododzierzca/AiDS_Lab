@@ -1,4 +1,5 @@
-import GrupaZajeciowa.GrupaZajeciowa;
+package MyArrayMyLinked;
+
 import GrupaZajeciowa.Student;
 
 import java.io.BufferedReader;

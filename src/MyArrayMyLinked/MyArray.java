@@ -1,3 +1,5 @@
+package MyArrayMyLinked;
+
 import java.util.*;
 
 public class MyArray<T> implements Iterable<T>{
