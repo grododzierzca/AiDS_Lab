@@ -84,7 +84,6 @@ public class MyLinked<T> implements Iterable<T>{
     }
 
     public void add(T t){
-        size++;
         if(first == null){
             Node new_first = new Node(null, t, null);
             first = new_first;
@@ -95,26 +94,42 @@ public class MyLinked<T> implements Iterable<T>{
             last.setNext(new_last);
             last = new_last;
         }
-    }
-
-    public void add(int index, T t){
-        Node temp = first;
-        for(int i = 0; i<index-1; i++){
-            temp = temp.nextNode();
-        }
-        Node new_node = new Node(temp, t, temp.nextNode());
-        temp.setNext(new_node);
-        temp.nextNode().setPrev(new_node);
         size++;
     }
 
-    public void remove(int index) throws IndexOutOfBoundsException{
-        Node temp = first;
-        for(int i = 0; i<index-1; i++){
-            temp = temp.nextNode();
+    public void add(int index, T t){
+        if(index == 0){
+            add(t);
+        }else {
+            Node temp = first;
+            for (int i = 0; i < index - 1; i++) {
+                temp = temp.nextNode();
+            }
+            Node new_node = new Node(temp, t, temp.nextNode());
+            temp.setNext(new_node);
+            temp.nextNode().setPrev(new_node);
         }
-        temp.setNext(temp.nextNode().nextNode());
-        temp.nextNode().nextNode().setPrev(temp.nextNode());
+        size++;
+    }
+
+    public void remove(int index) throws IndexOutOfBoundsException, NullPointerException{
+        if(index == 0){
+            Node temp = first;
+            temp.nextNode().setPrev(null);
+            first = temp.nextNode();
+        }else{
+            Node temp = first;
+            for(int i = 0; i<index-1; i++){
+                temp = temp.nextNode();
+            }
+            if(temp.nextNode().nextNode() == null){
+                temp.setNext(null);
+            }else {
+                temp.setNext(temp.nextNode().nextNode());
+                temp.nextNode().nextNode().setPrev(temp.nextNode());
+            }
+        }
+        size--;
         System.gc();
     }
 
@@ -145,6 +160,16 @@ public class MyLinked<T> implements Iterable<T>{
         return temp.getElement();
     }
 
+    public String toString(){
+        Node temp = first;
+        String s = temp.toString();
+        for(int i = 1; i<size; i++){
+            temp = temp.nextNode();
+            s+=temp.toString();
+        }
+        return s;
+    }
+
 
 
     @Override
@@ -170,7 +195,7 @@ public class MyLinked<T> implements Iterable<T>{
         public T next() {
             if (hasNext()) {
                 Node temp = first;
-                for(int i = 0; i<current; i++){
+                for(int i = 0; i<current-1; i++){
                     temp = temp.nextNode();
                 }
                 current++;

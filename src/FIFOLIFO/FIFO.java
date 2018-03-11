@@ -1,6 +1,7 @@
 package FIFOLIFO;
 
 import MyArrayMyLinked.MyLinked;
+import MyArrayMyLinked.NewLinked;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -8,10 +9,10 @@ import java.util.Queue;
 
 public class FIFO<T> implements Queue<T>{
 
-    private MyLinked<T> list;
+    private NewLinked<T> list;
 
     public FIFO(){
-        list = new MyLinked<>();
+        list = new NewLinked<>();
     }
 
     @Override
@@ -26,9 +27,9 @@ public class FIFO<T> implements Queue<T>{
     }
 
     @Override
-    public boolean contains(Object o) {
-        for(T t: list){
-            if(t.equals(o)){
+    public boolean contains(Object o) {  /////optional
+        for(int i =0; i<size(); i++){
+            if(o.equals(list.get(i))){
                 return true;
             }
         }
@@ -41,7 +42,7 @@ public class FIFO<T> implements Queue<T>{
     }
 
     @Override
-    public Object[] toArray() {
+    public Object[] toArray() { /////optional
         Object[] tab = new Object[list.size()];
         for(int i = 0; i<tab.length; i++){
             tab[i] = list.get(i);
@@ -50,45 +51,49 @@ public class FIFO<T> implements Queue<T>{
     }
 
     @Override
-    public <T1> T1[] toArray(T1[] a) { /////co to xd
-        return null;
+    public <T1> T1[] toArray(T1[] a) { /////optional
+        @SuppressWarnings("unchecked")
+        Object[] tab = new Object[list.size()];
+        for(int i = 0; i<tab.length; i++){
+            tab[i] = (T) list.get(i);
+        }
+        return (T1[])tab;
     }
 
     @Override
     public boolean add(T t) {
-        list.add(0, t);
-        return true;
+        try{
+            list.addFirst(t);
+            return true;
+        }catch(IllegalStateException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
-    public boolean remove(Object o) {
-        for(int i = 0; i<list.size(); i++){
-         if(list.get(i).equals(o)){
-             list.remove(i);
-             return true;
-            }
-        }
+    public boolean remove(Object o) { /////optional
         return false;
     }
 
     @Override
-    public boolean containsAll(Collection<?> c) { ////////////////////////////
+    public boolean containsAll(Collection<?> c) { /////optional
         return false;
     }
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
-        list.addAll(0, c);
+        list.addAllF(c);
         return true;
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(Collection<?> c) { /////optional
         return false;
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
+    public boolean retainAll(Collection<?> c) { /////optional
         return false;
     }
 
@@ -105,23 +110,31 @@ public class FIFO<T> implements Queue<T>{
 
     @Override
     public T remove() {
-        T t = list.get(0);
-        list.remove(0);
+        T t = list.get(size()-1);
+        list.removeLast();
         return t;
     }
 
     @Override
     public T poll() {
-        return null;
+        if(list.size()==0){
+            return null;
+        }else{
+           return remove();
+        }
     }
 
     @Override
     public T element() {
-        return null;
+        return list.get(size()-1);
     }
 
     @Override
     public T peek() {
-        return null;
+        if(list.size()==0){
+            return null;
+        }else{
+           return element();
+        }
     }
 }
